@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <style>
+            /* didn't put these in the css file because I needed to access them with js*/
+            @-webkit-keyframes next_week {
+                0% {
+                    left: 135vw;
+                }
+                100% {
+                    left: 135vw;
+                }
+            }
+            @-webkit-keyframes back_week {
+                0% {
+                    left: -35vw;
+                }
+                100% {
+                    left: -35vw;
+                }
+            }
+        </style>
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="viewport" content="width = device-width, initial-scale = 1, user-scalable = no">
+        <link rel="apple-touch-icon" href="images/icon76.png" sizes="76x76">
+        <link rel="apple-touch-icon" href="images/icon120.png" sizes="120x120">
+        <link rel="apple-touch-icon" href="images/icon152.png" sizes="152x152">
+        <link rel="apple-touch-icon" href="images/icon180.png" sizes="180x180">
+        <link rel="icon" href="images/icon128.png" sizes="128x128">
+        <link rel="icon" href="images/icon191.png" sizes="192x192">
+        <link rel='shortcut icon' type='image/x-icon' href='images/favicon.ico' />
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <script src="script.js"></script>
+    </head>
+    
+    <body onload="init()">
+        <title>NV HW</title>
+        <div id="nav_bar">
+            <div id="nav_title_container">
+                <div id="nav_title">Loading</div>
+            </div>
+            <div onclick="open_close_nav('alt')" id="nav_icon"></div>
+            <div class="hidden" id="add_icon" onclick="add_class()"></div>
+        </div>
+        <div class="hidden" id="nav_menu">
+            <div onclick="open_div('week_container')" class="nav_menu_item">&#9744; Back To Week</div>
+            <select onchange="new_week(); open_close_nav('close')" id="select_week"></select>
+            <div onclick="open_div('settings_container')" class="nav_menu_item">&#9744; Settings</div>
+        </div>
+        <div class="loading_container" id="loading_container">
+            <div class="loading" style="-webkit-animation-delay: 0s"></div>
+            <div class="loading" style="-webkit-animation-delay: .25s"></div>
+            <div class="loading" style="-webkit-animation-delay: .5s"></div>
+        </div>
+        <div class="hidden" id="add_remove_container">
+            <div class="hidden" id="add_container">
+                <select onchange="set_select(Object.keys(dtc_object[this.value]), 'teacher'); next_select(0)" class="select" id="select_department">
+                    <option value="Select Department">Select Department</option>
+                    <option value="ENGLISH DEPARTMENT">English</option>
+                    <option value="MATH DEPARTMENT">Math</option>
+                    <option value="SCIENCE DEPARTMENT">Science</option>
+                    <option value="SOCIAL STUDIES DEPARTMENT">Social Studies</option>
+                    <option value="CAREER TECHNICAL">Career Tech</option>
+                    <option value="ART">Art</option>
+                    <option value="PHYSICAL EDUCATION">Physical Education</option>
+                    <option value="WORLD LANGUAGE">World Language</option>
+                    <option value="MUSIC">Music</option>
+                    <option value="SPECIAL EDUCATION">Special Education</option>
+                </select>
+                <select onchange="set_select(Object.keys(dtc_object[document.getElementById('select_department').value][this.value]), 'class'); next_select(1)" class="hidden" id="select_teacher">
+                    <option value="Select Teacher">Select Teacher</option>
+                </select>
+                <select onchange="next_select(2)" class="hidden" id="select_class">
+                    <option value="Select Class">Select Class</option>
+                </select>
+            </div>
+            <div id="added_container"></div>
+        </div>
+        <div class="hidden" id="tutorial_select">
+            <p class="tutorial_paragraph">Welcome to NV HW! Please add your classes by clicking the + icon in the top right corner. When you are done click "Next".</p>
+        </div>
+        <div class="hidden" id="tutorial_nav">
+            <p class="tutorial_paragraph">This is the Menu. You can open and close it by clicking the Menu icon in the top left corner.</p>
+        </div>
+        <div class="hidden" id="tutorial_week">
+            <p class="tutorial_paragraph">This is the week view. This is where homework for the week is displayed. You can pull from the left or right to change the week.</p>
+        </div>
+        <div class="hidden" id="tutorial_settings">
+            <p class="tutorial_paragraph">This is the settings menu. Here you can clear all data from the app and reselect classes.</p>
+        </div>
+        <div class="hidden" id="tutorial_reminder">
+            <p class="tutorial_paragraph">This app can be added to your home screen on an iOS or Android device!</p>
+            <p class="tutorial_paragraph">For iOS: Click the
+                <img class="device_icon" src="images/iosicon.png">icon then click "Add to Home Screen".</p>
+            <p class="tutorial_paragraph">For Android: Click the
+                <img class="device_icon" src="images/androidicon.png">icon then click "Add to Home Screen".</p>
+        </div>
+        <button class="hidden" id="tutorial_next" onclick="show_tutorial()">Next</button>
+        <div class="hidden" id="week_container">
+            <div id="next_week" class="next_week"></div>
+            <div id="back_week" class="back_week"></div>
+            <div class="week_container_scroll">
+                <div class="week_day" id="monday">Monday
+                    <div id="monday_class_1" class="week_day_class">Please go to "Settings" and click "Add or Remove Class".</div>
+                    <div id="monday_class_2" class="week_day_class"></div>
+                    <div id="monday_class_3" class="week_day_class"></div>
+                    <div id="monday_class_4" class="week_day_class"></div>
+                    <div id="monday_class_5" class="week_day_class"></div>
+                    <div id="monday_class_6" class="week_day_class"></div>
+                    <div id="monday_class_7" class="week_day_class"></div>
+                    <div id="monday_class_8" class="week_day_class"></div>
+                    <div id="monday_class_9" class="week_day_class"></div>
+                </div>
+                <div class="week_day" id="tuesday">Tuesday
+                    <div id="tuesday_class_1" class="week_day_class"></div>
+                    <div id="tuesday_class_2" class="week_day_class"></div>
+                    <div id="tuesday_class_3" class="week_day_class"></div>
+                    <div id="tuesday_class_4" class="week_day_class"></div>
+                    <div id="tuesday_class_5" class="week_day_class"></div>
+                    <div id="tuesday_class_6" class="week_day_class"></div>
+                    <div id="tuesday_class_7" class="week_day_class"></div>
+                    <div id="tuesday_class_8" class="week_day_class"></div>
+                    <div id="tuesday_class_9" class="week_day_class"></div>
+                </div>
+                <div class="week_day" id="wednesday">Wednesday
+                    <div id="wednesday_class_1" class="week_day_class"></div>
+                    <div id="wednesday_class_2" class="week_day_class"></div>
+                    <div id="wednesday_class_3" class="week_day_class"></div>
+                    <div id="wednesday_class_4" class="week_day_class"></div>
+                    <div id="wednesday_class_5" class="week_day_class"></div>
+                    <div id="wednesday_class_6" class="week_day_class"></div>
+                    <div id="wednesday_class_7" class="week_day_class"></div>
+                    <div id="wednesday_class_8" class="week_day_class"></div>
+                    <div id="wednesday_class_9" class="week_day_class"></div>
+                </div>
+                <div class="week_day" id="thursday">Thursday
+                    <div id="thursday_class_1" class="week_day_class"></div>
+                    <div id="thursday_class_2" class="week_day_class"></div>
+                    <div id="thursday_class_3" class="week_day_class"></div>
+                    <div id="thursday_class_4" class="week_day_class"></div>
+                    <div id="thursday_class_5" class="week_day_class"></div>
+                    <div id="thursday_class_6" class="week_day_class"></div>
+                    <div id="thursday_class_7" class="week_day_class"></div>
+                    <div id="thursday_class_8" class="week_day_class"></div>
+                    <div id="thursday_class_9" class="week_day_class"></div>
+                </div>
+                <div class="week_day" id="friday" style="margin-bottom: 2vw;">Friday
+                    <div id="friday_class_1" class="week_day_class"></div>
+                    <div id="friday_class_2" class="week_day_class"></div>
+                    <div id="friday_class_3" class="week_day_class"></div>
+                    <div id="friday_class_4" class="week_day_class"></div>
+                    <div id="friday_class_5" class="week_day_class"></div>
+                    <div id="friday_class_6" class="week_day_class"></div>
+                    <div id="friday_class_7" class="week_day_class"></div>
+                    <div id="friday_class_8" class="week_day_class"></div>
+                    <div id="friday_class_9" class="week_day_class"></div>
+                </div>
+            </div>
+        </div>
+        <div class="hidden" id="settings_container">
+            <div onclick="clear_local_storage()" class="settings_item">&#9744; Clear All Data and Settings</div>
+            <div onclick="open_div('add_remove_container', 'add_remove_container'); update_class_div()" class="settings_item">&#9744; Add or Remove Classes</div>
+        </div>
+        </div>
+    </body>
+
+</html>
